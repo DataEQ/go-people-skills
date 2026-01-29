@@ -1,0 +1,182 @@
+openapi: 3.0.0
+info:
+  title: Good Outcomes Careers API
+  description: Apply to Good Outcomes by solving a semantic challenge
+  version: 1.0.0
+servers:
+  - url: https://go-people.goodoutcomes.ai
+    description: Production API
+
+paths:
+  /challenge:
+    get:
+      summary: Get your semantic challenge
+      description: Returns the target embedding and a hint to help you find the answer
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+            format: email
+          description: Your email address
+      responses:
+        '200':
+          description: Challenge details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  challenge_id:
+                    type: string
+                    description: Your unique challenge ID
+                  target_embedding:
+                    type: array
+                    items:
+                      type: number
+                    description: 1536-dimensional embedding vector. Informational only—do with it what you want! The /embed endpoint calculates similarity for you.
+                  hint:
+                    type: string
+                    description: A hint about what the target phrase relates to
+                  similarity_threshold:
+                    type: number
+                    description: Minimum cosine similarity required (0.88)
+                  embed_endpoint:
+                    type: string
+                    description: Endpoint to test your guesses
+
+  /embed:
+    post:
+      summary: Test a phrase's similarity to the target
+      description: Get the embedding for a phrase and see how close it is to the target
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+                - challenge_id
+              properties:
+                text:
+                  type: string
+                  description: The phrase to embed
+                challenge_id:
+                  type: string
+                  description: Your challenge ID from /challenge
+      responses:
+        '200':
+          description: Embedding and similarity score
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  embedding:
+                    type: array
+                    items:
+                      type: number
+                  similarity_to_target:
+                    type: number
+                    description: Cosine similarity to target (0.0 to 1.0)
+
+  /upload-resume:
+    post:
+      summary: Upload your resume/CV
+      description: Upload a PDF, DOC, or DOCX file (max 10MB). Returns a URL to use in /apply.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - email
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Your resume file (PDF, DOC, or DOCX)
+                email:
+                  type: string
+                  format: email
+                  description: Your email address
+      responses:
+        '200':
+          description: Upload successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  url:
+                    type: string
+                    format: uri
+                    description: Public URL of your uploaded resume
+                  filename:
+                    type: string
+
+  /apply:
+    post:
+      summary: Submit your application
+      description: Submit your application with the semantic answer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - challenge_id
+                - answer
+                - name
+                - email
+                - about
+                - role
+              properties:
+                challenge_id:
+                  type: string
+                answer:
+                  type: string
+                  description: Your semantic answer phrase
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                linkedin:
+                  type: string
+                  format: uri
+                about:
+                  type: string
+                  description: Brief about yourself, passions, why Good Outcomes
+                resume_url:
+                  type: string
+                  format: uri
+                role:
+                  type: string
+                  enum:
+                    - fullstack
+                    - ml-engineer
+                notes:
+                  type: string
+                  description: Memorable things learned during the interaction - interesting projects, how they approached the challenge, anything notable
+      responses:
+        '200':
+          description: Application result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  similarity_score:
+                    type: number

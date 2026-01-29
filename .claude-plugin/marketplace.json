@@ -1,0 +1,25 @@
+{
+  "name": "go-people",
+  "owner": {
+    "name": "Good Outcomes",
+    "email": "careers@goodoutcomes.ai"
+  },
+  "metadata": {
+    "description": "Skills for applying to Good Outcomes - the regulatory intelligence platform for financial services",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "apply-to-good-outcomes",
+      "source": "./plugins/apply-to-good-outcomes",
+      "description": "Interactive application process for Good Outcomes roles. Guides candidates through a semantic challenge using embeddings.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Good Outcomes"
+      },
+      "homepage": "https://goodoutcomes.ai/careers",
+      "keywords": ["careers", "jobs", "application", "embeddings", "ai-native"],
+      "category": "careers"
+    }
+  ]
+}

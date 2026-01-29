@@ -1,0 +1,13 @@
+{
+  "name": "apply-to-good-outcomes",
+  "description": "Interactive application process for Good Outcomes. Guides candidates through gathering their info and solving a semantic challenge to apply for AI-native engineering roles.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Good Outcomes",
+    "email": "careers@goodoutcomes.ai"
+  },
+  "homepage": "https://goodoutcomes.ai/careers",
+  "repository": "https://github.com/DataEQ/go-people-skills",
+  "license": "MIT",
+  "keywords": ["careers", "jobs", "application", "embeddings", "semantic-search", "ai-native"]
+}
